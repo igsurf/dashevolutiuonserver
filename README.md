@@ -1,6 +1,3 @@
-# dashevolutiuonserver
-Server Application foi dashboard
-
 ## Installation 
 
 - `NPM I`
