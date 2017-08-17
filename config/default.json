@@ -5,5 +5,10 @@
     "endpoints": {
         "graficoLinguagens": "/search/issues",
         "graficoIssues": "/search/issues"
+    },
+    "socket": {
+        "configuracao": {
+            "reconnectionAttempts": 5
+        }
     }
 }
