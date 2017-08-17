@@ -1,0 +1,9 @@
+{
+    "servidor": {
+        "url": "https://api.github.com"
+    },
+    "endpoints": {
+        "graficoLinguagens": "/search/issues",
+        "graficoIssues": "/search/issues"
+    }
+}
