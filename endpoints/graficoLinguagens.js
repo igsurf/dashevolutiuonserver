@@ -1,7 +1,6 @@
 // IMPORTS        ///////////////////////
 const clients = require('restify-clients');
 const config = require('config');
-const Promise = require('promise');
 
 // CONSTANTES     ///////////////////////
 const CHAVE_ENDPOINT = 'graficoLinguagens';
