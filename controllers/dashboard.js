@@ -26,7 +26,7 @@ class Dashboard {
             }
 
             function tratarErro(error) {
-                console.log(error);
+                this.socket.emit('error', error);
             }   
         }
 
