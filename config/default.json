@@ -2,9 +2,18 @@
     "servidor": {
         "url": "https://api.github.com"
     },
-    "endpoints": {
-        "graficoLinguagens": "/search/issues",
-        "graficoIssues": "/search/issues"
+    "intervalo": 60000,
+    "github": {
+        // optional
+        "debug": true,
+        "protocol": "https",
+        "host": "api.github.com",
+        "headers": {
+            "user-agent": "Dashboard-Hackton-GitHub-App" 
+        },
+        "family": 6,
+        "followRedirects": false,
+        "timeout": 5000
     },
     "socket": {
         "configuracao": {

@@ -1,5 +1,6 @@
 // IMPORTS        ///////////////////////
 const GraficoLinguagens = require('../endpoints/graficoLinguagens');
+const config = require('config');
 
 // IMPLEMENTATION //////////////////////
 /**
@@ -9,10 +10,11 @@ class Dashboard {
 
     constructor(socket) {
         this.socket = socket;
-        this.intervalo = 10000;
+        this.intervalo = config.intervalo;
     }
 
     iniciar() {
+        var that = this;
         const graficoLinguagens = new GraficoLinguagens();
 
         function recuperarGraficoLinguagens() {
@@ -21,12 +23,12 @@ class Dashboard {
                 .catch(tratarErro);
 
             function emitirGraficoLinguagens(resposta) {
-                this.socket.broadcast.emit('carregarGraficoLinguagens', resposta);
-                this.socket.emit('carregarGraficoLinguagens', resposta);
+                that.socket.broadcast.emit('carregarGraficoLinguagens', resposta);
+                that.socket.emit('carregarGraficoLinguagens', resposta);
             }
 
             function tratarErro(error) {
-                this.socket.emit('error', error);
+                that.socket.emit('error', error);
             }   
         }
 
