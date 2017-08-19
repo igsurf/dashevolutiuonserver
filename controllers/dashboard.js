@@ -1,5 +1,6 @@
 // IMPORTS        ///////////////////////
 const GraficoLinguagens = require('../endpoints/graficoLinguagens');
+const GraficoRateProjetos = require('../endpoints/graficoRateProtejos');
 const config = require('config');
 
 // IMPLEMENTATION //////////////////////
@@ -16,6 +17,7 @@ class Dashboard {
     iniciar() {
         var that = this;
         const graficoLinguagens = new GraficoLinguagens();
+        const graficoRateProjetos = new GraficoRateProjetos();
 
         function recuperarGraficoLinguagens() {
             graficoLinguagens.chamarAPI()
@@ -32,10 +34,26 @@ class Dashboard {
             }   
         }
 
+        function recuperarGraficoRateProjetos() {
+            graficoRateProjetos.chamarAPI()
+                .then(emitirGraficoRateProjetos)
+                .catch(tratarErro);
+
+            function emitirGraficoRateProjetos(resposta) {
+                that.socket.broadcast.emit('carregarGraficoRateProjetos', resposta);
+                that.socket.emit('carregarGraficoRateProjetos', resposta);
+            }
+
+            function tratarErro(error) {
+                that.socket.emit('error', error);
+            }   
+        }
+
         setInterval(refrescarAPIs, this.intervalo);
 
         function refrescarAPIs() {
-            recuperarGraficoLinguagens();
+            // recuperarGraficoLinguagens();
+            recuperarGraficoRateProjetos();
         }
     }
 }
