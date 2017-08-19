@@ -21,11 +21,7 @@ class Dashboard {
         const graficoRateProjetos = new GraficoRateProjetos();
         const graficoCommitsPerProject = new GraficoCommitsPerProject();
 
-        function recuperarGraficoRateProjetos() {
-            graficoRateProjetos.chamarAPI()
-                .then(emitirGraficoRateProjetos)
-                .catch(tratarErro);
-
+        var recuperarGraficoRateProjetos = () => {
             var emitirGraficoRateProjetos = (res) => {
                 this.rateProject =  res.data;
                 this.socket.emit('carregarGraficoRateProjetos', this.rateProject);
@@ -34,21 +30,27 @@ class Dashboard {
             var tratarErro = (error) => {
                 this.socket.emit('error', error);
             }
+
+            graficoRateProjetos.chamarAPI()
+                .then(emitirGraficoRateProjetos)
+                .catch(tratarErro);
         }
 
-        function recuperarGraficoCommitsPerProject() {
-            graficoCommitsPerProject.chamarAPI()
-                .then(emitirGraficoCommitsPerProject)
-                .catch(tratarErro);
-
+        var recuperarGraficoCommitsPerProject = () => {
             var emitirGraficoCommitsPerProject = (res) => {
                 this.commitsPerProject = res.data;
                 this.socket.emit('carregarCommitsPerProject', this.commitsPerProject);
+
+                console.log(this.commitsPerProject);
             }
 
             var tratarErro = (error) => {
                 this.socket.emit('error', error);
             }
+
+            graficoCommitsPerProject.chamarAPI()
+                .then(emitirGraficoCommitsPerProject)
+                .catch(tratarErro);
         }
 
         setInterval(refreshAPIs, this.intervalo);
