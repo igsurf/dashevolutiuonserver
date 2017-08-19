@@ -1,6 +1,6 @@
 // IMPORTS        ///////////////////////
-const GraficoLinguagens = require('../endpoints/graficoLinguagens');
 const GraficoRateProjetos = require('../endpoints/graficoRateProtejos');
+const GraficoCommitsPerProject = require('../endpoints/graficoCommitsPerProject');
 const config = require('config');
 
 // IMPLEMENTATION //////////////////////
@@ -8,53 +8,62 @@ const config = require('config');
  * Classe responsável por controlar os sockets
  */
 class Dashboard {
-
     constructor(socket) {
         this.socket = socket;
         this.intervalo = config.intervalo;
+        this.rateProject = {};
+        this.commitsPerProject = {};
+
+        this.getInfo();
     }
 
-    iniciar() {
-        var that = this;
-        const graficoLinguagens = new GraficoLinguagens();
+    getInfo() {
         const graficoRateProjetos = new GraficoRateProjetos();
-
-        function recuperarGraficoLinguagens() {
-            graficoLinguagens.chamarAPI()
-                .then(emitirGraficoLinguagens)
-                .catch(tratarErro);
-
-            function emitirGraficoLinguagens(resposta) {
-                that.socket.broadcast.emit('carregarGraficoLinguagens', resposta);
-                that.socket.emit('carregarGraficoLinguagens', resposta);
-            }
-
-            function tratarErro(error) {
-                that.socket.emit('error', error);
-            }   
-        }
+        const graficoCommitsPerProject = new GraficoCommitsPerProject();
 
         function recuperarGraficoRateProjetos() {
             graficoRateProjetos.chamarAPI()
                 .then(emitirGraficoRateProjetos)
                 .catch(tratarErro);
 
-            function emitirGraficoRateProjetos(resposta) {
-                that.socket.broadcast.emit('carregarGraficoRateProjetos', resposta);
-                that.socket.emit('carregarGraficoRateProjetos', resposta);
+            var emitirGraficoRateProjetos = (res) => {
+                this.rateProject =  res.data;
+                this.socket.emit('carregarGraficoRateProjetos', this.rateProject);
             }
 
-            function tratarErro(error) {
-                that.socket.emit('error', error);
-            }   
+            var tratarErro = (error) => {
+                this.socket.emit('error', error);
+            }
         }
 
-        setInterval(refrescarAPIs, this.intervalo);
+        function recuperarGraficoCommitsPerProject() {
+            graficoCommitsPerProject.chamarAPI()
+                .then(emitirGraficoCommitsPerProject)
+                .catch(tratarErro);
 
-        function refrescarAPIs() {
-            // recuperarGraficoLinguagens();
+            var emitirGraficoCommitsPerProject = (res) => {
+                this.commitsPerProject = res.data;
+                this.socket.emit('carregarCommitsPerProject', this.commitsPerProject);
+            }
+
+            var tratarErro = (error) => {
+                this.socket.emit('error', error);
+            }
+        }
+
+        setInterval(refreshAPIs, this.intervalo);
+
+        function refreshAPIs() {
             recuperarGraficoRateProjetos();
+            recuperarGraficoCommitsPerProject();
         }
+
+        refreshAPIs();
+    }
+
+    iniciar() {
+        this.socket.emit('carregarGraficoRateProjetos', this.rateProject);
+        this.socket.emit('carregarCommitsPerProject', this.commitsPerProject);
     }
 }
 
