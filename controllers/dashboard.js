@@ -40,8 +40,6 @@ class Dashboard {
             var emitirGraficoCommitsPerProject = (res) => {
                 this.commitsPerProject = res.data;
                 this.socket.emit('carregarCommitsPerProject', this.commitsPerProject);
-
-                console.log(this.commitsPerProject);
             }
 
             var tratarErro = (error) => {

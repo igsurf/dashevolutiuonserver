@@ -11,11 +11,11 @@ class GraficoCommitsPerProject {
         var filter = {
             owner: 'facebook',
             repo: 'react',
-            page: 1,
-            per_page: 100
+            since: '2016-08-19T00:00:00',
+            until: '2017-08-19T00:00:00'
         }
 
-        return this.github.repos.getContributors(filter);
+        return this.github.repos.getCommits(filter);
     }
 }
 
