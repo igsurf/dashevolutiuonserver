@@ -40,8 +40,8 @@ class Dashboard {
                 .catch(tratarErro);
 
             function emitirGraficoRateProjetos(resposta) {
-                that.socket.broadcast.emit('carregarGraficoRateProjetos', resposta);
-                that.socket.emit('carregarGraficoRateProjetos', resposta);
+                that.socket.broadcast.emit('carregarGraficoRateProjetos', resposta.data);
+                that.socket.emit('carregarGraficoRateProjetos', resposta.data);
             }
 
             function tratarErro(error) {
